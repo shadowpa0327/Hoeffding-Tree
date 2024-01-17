@@ -10,7 +10,6 @@ code/src/core/SparseEstimator.cpp \
 code/src/core/SparseInstance.cpp \
 code/src/core/SplitCriterion.cpp \
 code/src/utils/Utils.cpp \
-code/src/utils/Log.cpp \
 code/src/utils/CommandLineParser.cpp \
 code/src/utils/Configurable.cpp \
 code/src/utils/DynamicCreateClass.cpp \
@@ -64,19 +63,13 @@ includepath = -Icode/src/core -Icode/src/learners  -Icode/src \
     -Icode/src/streams/ 
     
 
-glog = -lglog -lpthread
-
-log4cxx = -llog4cxx
-
-log4cpp = -llog4cpp -lpthread
-
 debug = -g
 
 warning = -Wall -Wno-sign-compare -Wno-nonnull -Wno-unused-variable  
 
-flags = -std=c++11 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE64 -O3 -DUNIX  $(debug)  
+flags = -std=c++17 -lstdc++ -O3 $(debug)  
 
 all:
-	g++ $(sourcefiles) $(includepath) $(log4cpp) $(flags) -o $(targetfile)
+	clang $(sourcefiles) $(includepath) $(flags) -o $(targetfile)
 
 

@@ -18,32 +18,30 @@
 #ifndef Log_H_
 #define Log_H_
 
-#ifdef _MSC_VER
-#pragma comment(lib, "log4cpp.lib")  
-#pragma comment(lib, "ws2_32.lib")  
-#endif
+#include <iostream>
+#include <string>
+#include <cstdarg>
+#include <vector>
 
-#include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
+// Function for handling formatted strings
+inline std::string format_string(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    std::vector<char> buffer(1024);
+    vsnprintf(buffer.data(), buffer.size(), format, args);
+    va_end(args);
+    return std::string(buffer.data());
+}
 
-#ifdef _MSC_VER
-#define LOG_DEBUG ::log_smartDM.debug
-#define LOG_INFO ::log_smartDM.info
-#define LOG_WARN ::log_smartDM.warn
-#define LOG_ERROR ::log_smartDM.error
-#else
-#define LOG_DEBUG(x, args...) log_smartDM.debug(x, ##args)
-#define LOG_INFO(x, args...) log_smartDM.info(x, ##args)
-#define LOG_WARN(x, args...) log_smartDM.warn(x, ##args)
-#define LOG_ERROR(x, args...) log_smartDM.error(x, ##args)
-#endif
+// Overload for handling a single string argument
+inline std::string format_string(const std::string& message) {
+    return message;
+}
 
-extern log4cpp::Category& log_smartDM;
-
-class Log {
-public:
-	static bool openLog(const std::string& configfile);
-	static void closeLog();
-};
+// Logging macro
+#define LOG_INFO(...) std::cout << "INFO: " << format_string(__VA_ARGS__) << std::endl
+#define LOG_DEBUG(...)  std::cout << "DEBUG: " << format_string(__VA_ARGS__) << std::endl
+#define LOG_WARN(...)  std::cout << "WARNING: " << format_string(__VA_ARGS__) << std::endl
+#define LOG_ERROR(...) std::cerr << "ERROR: " << format_string(__VA_ARGS__) << std::endl
 
 #endif /* Log_H_ */
